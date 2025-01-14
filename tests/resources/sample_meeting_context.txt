@@ -1,0 +1,16 @@
+
+
+From: Person A
+Sent: Friday, December 13, 2024 12:03 PM
+To: Person A <person.a@company1.com>; Person B <person.b@company2.com>; Person C <person.c@company2.com>; Person D (Consulting Corp.) <person.d@company1.com>; Person E (Consulting Corp.) <person.e@company1.com>
+Subject: Consent Integrated Workflow Review
+When: Tuesday, December 17, 2024 11:00 AM-12:00 PM.
+Where: Microsoft Teams Meeting
+
+
+
+
+
+Review integrated flows expected to support consent to identify the target endpoints and implementation design.
+
+

@@ -1,0 +1,19 @@
+# This file is used for testing purposes only and should not be included in production builds.
+chunk_record_duration: 1
+audio_chunk_size: 1024
+audio_channels: 1
+audio_rate: 16000
+whisper_model: 'large'
+transcribe_interval: 0.5
+combine_interval: 2
+monitor_interval: 0.1
+watch_directory: '../data/test'
+output_directory: '../output/test'
+meeting_prompt_file: 'app/prompts/meeting_prompt_test.md'
+meeting_notes_file: 'meeting_notes_summary_test.md'
+openai_model: 'gpt-4o-mini'
+check_interval: 60
+summary_interval: 3
+log_level: 'DEBUG'
+local_llm_model: 'ollama/mistral:v0.3-32k'
+websocket_port: 9876

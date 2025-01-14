@@ -1,25 +1,3 @@
-TODO:
-DONE - * Fix integration w/threads (Chris)
-DONE - * Make streamlit start/stop to run record/transcribe from UI (Chris)
-DONE - * Summarize minute chunks with local llm (Chris)
-DONE - * Show minute-summaries rolling (Chris)
-DONE - * Only do big LLM summary at the end (Chris)
-DONE - * Spinners and lock for clearer "processing" signaling 
-DONE - * Download buttons for summary/transcript working
-DONE - * Upload button/storage for meeting notes path/files
-
-Left Off
-* Bug- debug the summarizer to ensure prompt selection by timeframe is working
-* Bug- final summarization not working
-* 
-
-* Upload button/storage for meeting context path/files
-* Clean up file-system/archiving and make a nice listing on a second tab to view prior meetings
-* Summary extracted to json used for the render & possibly graph storage (Rick) 
-* Graph integration of meetings (Rick)
-* Graph integration of documentation
-
-
 # Meeting Buddy
 
 Meeting Buddy is an automated system for recording, transcribing, and generating meeting notes in real-time. It captures audio in 15-second intervals, transcribes the audio using Whisper, and generates comprehensive meeting notes using OpenAI's GPT models.
@@ -34,8 +12,7 @@ Meeting Buddy is an automated system for recording, transcribing, and generating
 
 ## Prerequisites
 
-- Python 3.12.7
-- Conda package manager
+- Python 3.12
 - OpenAI API key
 - FFmpeg (for Whisper transcription)
 
@@ -59,52 +36,89 @@ pip install -r requirements.txt
 export OPENAI_API_KEY='your-api-key-here'
 ```
 
-## Core Components
-
-| Program | Description | How to Run |
-|---------|-------------|------------|
-| record.py | Records audio in 15-second intervals | `python record.py` |
-| transcribe.py | Transcribes audio files using Whisper | `python transcribe.py` |
-| combine_all.py | Combines transcription files | `python combine_all.py` |
-| create_meeting_notes.py | Generates meeting notes using GPT | `python create_meeting_notes.py` |
-| view.py | Web interface for viewing meeting notes | `streamlit run view.py` |
-| transcripts_viewer.py | Web interface for viewing transcripts | `streamlit run transcripts_viewer.py` |
-| question_detector.py | Detects interview questions | `python question_detector.py` |
-| answer_creator.py | Generates answers for detected questions | `python answer_creator.py` |
-| answer_viewer.py | Web interface for viewing answers | `streamlit run answer_viewer.py` |
-
 ## Getting Started
 
-1. Set up a .env file in the project root:
-```properties
-CHUNK_RECORD_DURATION=2
-WATCH_DIRECTORY=../../data
-OUTPUT_DIRECTORY=../../output
-```
+After you first run the program, you will have a config.yaml file in your program folder.
+You may check this to see any options you want to update.
 
-2. Set up your environment:
-```bash
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-source env.sh
-```
+### Sample Config.yaml
+If you want to get started with a valid file rather than waiting for the generated 
+defaults, here's the current blueprint. Note this may change across releases.
 
+You'll want to make sure you set valid values for your own accounts for things like:
+
+openai_api_key
+openai_model
+
+Or use the app config panel to do so.
+
+```yaml
+audio_channels: 1
+audio_chunk_size: 1024
+audio_rate: 44100
+check_interval: 120
+chunk_record_duration: 15
+combine_interval: 5
+context_directory: /Users/[your user]/chris/ai-dev/meeting_buddy/context
+local_llm_model: ollama/mistral:v0.3-32k
+log_level: INFO
+meeting_notes_file: meeting_notes_summary.md
+meeting_prompt_file: app/prompts/meeting_prompt.md
+monitor_interval: 1
+openai_api_key: ...
+openai_model: gpt-4o-2024-11-20
+output_directory: /Users/cmathias/chris/ai-dev/meeting_buddy/output
+prompts_directory: /Users/cmathias/chris/ai-dev/meeting_buddy/app/prompts
+summary_interval: 5
+transcribe_interval: 1
+user_meeting_context_file: meeting_context_note.txt
+watch_directory: /Users/cmathias/chris/ai-dev/meeting_buddy/data
+websocket_port: 9876
+whisper_model: base
+
+```
 ### Running the Application
 
-There are two ways to start the application:
+There are three ways to start the application
 
-1. Using the shell script (recommended):
+All methods will start both the WebSocket service and the Streamlit interface. 
+The application will be available at http://localhost:8501:
+
+1. Use Docker
+```shell
+TODO
+```
+
+2. Using the shell script (recommended):
 ```bash
 ./run_app.sh
 ```
 
-2. Using Python directly:
+3. Using Python directly:
 ```bash
 python app/mb/run_app.py
 ```
 
-Both methods will start both the WebSocket service and the Streamlit interface. The application will be available at http://localhost:8501
+## Developing
+
+1. Set up your environment:
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Optional Env
+You can create an env.sh that has config values you don't want exposed, e.g.
+```env.sh
+export OPENAI_API_KEY=[your key]
+```
+
+and then
+```shell
+source env.sh
+```
+
 
 ### Development Setup
 
@@ -153,6 +167,7 @@ Enter command> stop my_meeting
 Enter command> quit
 ```
 
-By default, the client connects to `ws://localhost:8765`. You can specify a different URI using the `--uri` argument:
+By default, the client connects to `ws://localhost:{config.websocket_port}`. You can specify a different URI using the `--uri` argument:
 ```bash
 python -m app.mb.socket_test --uri ws://localhost:9000
+```

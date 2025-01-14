@@ -1,0 +1,30 @@
+exclude_pattern: "project_structure.md"
+forbidden_dirs:
+- __pycache__
+- dist
+- node_modules
+- cdk.out
+- env
+- venv
+- context
+- meeting_context
+include_pattern: null
+log_level: INFO
+outfile: project_structure.md
+project_path: .
+supported_extensions:
+  .avsc: avro
+  .cs: csharp
+  .go: go
+  .java: java
+  .js: javascript
+  .kt: kotlin
+  .kts: kotlin
+  .py: python
+  .sh: bash
+  .sql: sql
+  .toml: toml
+  .ts: typescript
+  .xml: xml
+  .yaml: yaml
+  .md: markdown
