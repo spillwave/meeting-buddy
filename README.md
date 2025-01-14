@@ -87,10 +87,16 @@ There are three ways to start the application
 All methods will start both the WebSocket service and the Streamlit interface. 
 The application will be available at http://localhost:8501:
 
-1. Use Docker
-```shell
-TODO
+1. Use Docker (with GPU support):
+```bash
+# Build the Docker image
+docker build -t meeting-buddy .
+
+# Run the container with GPU support
+docker run --gpus all -p 11434:11434 -p 8501:8501 meeting-buddy
 ```
+
+The application will be available at http://localhost:8501
 
 2. Using the shell script (recommended):
 ```bash
@@ -173,4 +179,3 @@ Enter command> quit
 By default, the client connects to `ws://localhost:{config.websocket_port}`. You can specify a different URI using the `--uri` argument:
 ```bash
 python -m app.mb.socket_test --uri ws://localhost:9000
-```
