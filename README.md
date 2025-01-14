@@ -41,6 +41,9 @@ export OPENAI_API_KEY='your-api-key-here'
 After you first run the program, you will have a config.yaml file in your program folder.
 You may check this to see any options you want to update.
 
+### Local Model Setup
+See: [local-ai-notes.md](doc%2Flocal-ai-notes.md)
+
 ### Sample Config.yaml
 If you want to get started with a valid file rather than waiting for the generated 
 defaults, here's the current blueprint. Note this may change across releases.
