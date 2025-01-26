@@ -22,6 +22,47 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+def initialize_session_state():
+    """Initialize Streamlit session state variables."""
+    # Create a snapshot of current session state to avoid modification during iteration
+    current_vars = set(st.session_state.keys())
+    
+    # Initialize config first if needed
+    if 'mb_config' not in current_vars:
+        st.session_state.mb_config = Config.load_config(
+            config_file_path=os.path.join(ROOT_PATH, "config.yaml")
+        )
+    
+    # Define all session variables with their default values
+    session_vars = {
+        'transcription_text': "",
+        'interim_summary_text': "",
+        'final_summary_text': "",
+        'transcribing': False,
+        'meeting_title': "Untitled Meeting",
+        'meeting_context': "",
+        'last_summary_time': time.time(),
+        'thread_to_view_message_queue': queue.Queue(),
+        'view_to_thread_message_queue': queue.Queue(),
+        'starting': False,
+        'stopping': False,
+        'first_transcription_received': False,
+        'download_transcription': None,
+        'download_summary': None,
+        'download_transcription_name': '',
+        'download_summary_name': '',
+        'expected_file_types': {'transcription': False, 'summary': False},
+        'received_final_summary': False
+    }
+
+    # Initialize missing variables all at once to avoid iteration issues
+    missing_vars = {k: v for k, v in session_vars.items() if k not in current_vars}
+    if missing_vars:
+        st.session_state.update(missing_vars)
+
+# Initialize session state before anything else
+initialize_session_state()
+
 # Auto-refresh configuration
 AUTO_REFRESH_INTERVAL = 1000  # Refresh every 1000 milliseconds (1 second)
 
@@ -73,34 +114,6 @@ with st.expander("📝 Meeting Context", expanded=False):
 
 st.text_input("Meeting Title", key="meeting_title", placeholder="Enter meeting title...")
 
-def initialize_session_state():
-    """Initialize Streamlit session state variables."""
-    if 'mb_config' not in st.session_state:
-        st.session_state.mb_config = Config.load_config(
-            config_file_path=os.path.join(ROOT_PATH, "config.yaml")
-        )
-    session_vars = {
-        'transcription_text': "",
-        'interim_summary_text': "",
-        'final_summary_text': "",
-        'transcribing': False,
-        'meeting_title': "Untitled Meeting",
-        'last_summary_time': time.time,
-        'thread_to_view_message_queue': queue.Queue,
-        'view_to_thread_message_queue': queue.Queue,
-        'starting': False,
-        'stopping': False,
-        'first_transcription_received': False,
-        'download_transcription': None,
-        'download_summary': None,
-        'download_transcription_name': '',
-        'download_summary_name': '',
-        'expected_file_types': {'transcription': False, 'summary': False},
-        'received_final_summary': False
-    }
-    for var, default in session_vars.items():
-        if var not in st.session_state:
-            st.session_state[var] = default() if callable(default) else default
 
 
 def start_transcription():
