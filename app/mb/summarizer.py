@@ -114,7 +114,7 @@ class MeetingNotesGenerator:
                 logging.info(f"Meeting notes saved to {self.meeting_notes_path}")
                 return response_adjusted_markdown
             else:
-                logging.error("No response received from model api.")
+                logging.error("No response received from final-summarization model api.")
                 raise Exception(f"No response received from model api.")
 
         except Exception as e:

@@ -41,6 +41,7 @@ def initialize_session_state():
         'transcribing': False,
         'meeting_title': "Untitled Meeting",
         'meeting_context': "",
+        'error_message': "",
         'last_summary_time': time.time(),
         'thread_to_view_message_queue': queue.Queue(),
         'view_to_thread_message_queue': queue.Queue(),
@@ -62,6 +63,12 @@ def initialize_session_state():
 
 # Initialize session state before anything else
 initialize_session_state()
+
+# Error message display
+if "error_message" in st.session_state and st.session_state.error_message:
+    st.error(st.session_state.error_message)
+    # Clear error after displaying
+    st.session_state.error_message = ""
 
 # Auto-refresh configuration
 AUTO_REFRESH_INTERVAL = 1000  # Refresh every 1000 milliseconds (1 second)
@@ -179,6 +186,9 @@ def process_queue():
                     st.session_state.download_summary = msg_data["data"]
                     st.session_state.download_summary_name = msg_data["filename"]
 
+            elif msg_type == "error":
+                st.session_state.error_message = msg_data
+                
             elif msg_type == "state_update":
                 for key, value in msg_data.items():
                     if key == "transcribing":

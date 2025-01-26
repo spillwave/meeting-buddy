@@ -181,12 +181,13 @@ class Service:
                                 except Exception as ws_err:
                                     logger.error(f"Failed to send error message: {ws_err}")
                         except Exception as e:
+                            error_msg = f"Error: Failed to generate summary - {str(e)}"
                             logger.error(f"Error in summarize handler: {str(e)}", exc_info=True)
                             try:
                                 if not websocket.closed:
                                     await websocket.send(json.dumps({
                                         "type": "error",
-                                        "text": f"Failed to generate summary: {str(e)}"
+                                        "text": error_msg
                                     }))
                             except Exception as ws_err:
                                 logger.error(f"Failed to send error message: {ws_err}")
@@ -397,11 +398,11 @@ class Service:
                                 break
                                 
                     except asyncio.TimeoutError:
-                        error_msg = "Timeout while generating final summary"
+                        error_msg = "Error: Timeout while generating final summary"
                         logger.error(error_msg)
                         await self.broadcast_error(error_msg)
                     except Exception as e:
-                        error_msg = f"Error generating final summary: {str(e)}"
+                        error_msg = f"Error: Failed to generate final summary - {str(e)}"
                         logger.error(error_msg, exc_info=True)
                         await self.broadcast_error(error_msg)
                         

@@ -108,7 +108,7 @@ def main():
                 ['streamlit', 'run', 'app/mb/home.py', 
                  '--server.address', '0.0.0.0',
                  '--server.runOnSave', 'false',
-                 '--logger.level=debug'],
+                 '--logger.level=info'],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 universal_newlines=True,
